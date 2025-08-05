@@ -1,3 +1,6 @@
+CFLAGS=-L../ -Wl,-rpath=../
+LDFLAGS=-ljarg
+
 .PHONY: build
 build:
-	gcc -L../ -Wl,-rpath=../ -o test main.c -ljarg
+	gcc $(CFLAGS) -o test main.c $(LDFLAGS)
