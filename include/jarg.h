@@ -3,11 +3,18 @@
 
 #include <string.h>
 #include <stdio.h>
-
 #define LEN(x) sizeof(x)/sizeof(x[0])
 
-struct arg {
+enum arg_flag
+{
+	JARGF_REQUIRED =	1 << 0,
+	JARGF_ANY_COUNT =	1 << 1,
+};
+
+struct arg
+{
 	char* identifier;
+	enum arg_flag flags;
 	void (*handle)(int argc, char** argv);
 	int required_params;
 };
@@ -21,4 +28,5 @@ int	jarg_handle_args(
 		void (*unrecognised_handle)(char*), 
 		int argc, 
 		char** argv);
+
 #endif // JARG_H
