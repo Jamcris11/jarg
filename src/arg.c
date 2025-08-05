@@ -45,19 +45,19 @@ jarg_handle_args(
 		char** argv
 ) {
 	for ( int i = 1; i < argc; i++ ) {
-		bool anymatch = false;
+		bool cmd_matched = false;
 		for ( int j = 0; j < jarg_args_len; j++ ) {
 			const enum jarg_result res = 
 				handle_arg(&i, j, unrecognised_handle, argc, argv);
 			if ( res == JARG_ERROR ) {
 				return JARG_ERROR;
 			} else if ( res == JARG_SUCCESS ) {
-				anymatch = true;
+				cmd_matched = true;
 				break;
 			}
 		}
 
-		if ( anymatch == false && unrecognised_handle != NULL ) {
+		if ( cmd_matched == false && unrecognised_handle != NULL ) {
 			unrecognised_handle(argv[i]);
 		}
 
