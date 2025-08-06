@@ -1,5 +1,5 @@
 # jarg - Jim's args
-# A simple C library for argument handling
+# A simple C library for argument parsing 
 
 ## Build
 ```
