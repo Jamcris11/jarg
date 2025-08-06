@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include "../include/jarg.h"
 
-static void	handle_print(const struct arg* jarg, int argc, char** argv);
+static void	handle_print(const struct jarg* arg, int argc, char** argv);
 
-const struct arg jarg_args[] = {
+const struct jarg jarg_args[] = {
 /*	  id,		param,	description,								flags,							handle			*/
 	{ "-f",		"file", "example of arg opt with param", 			JARGF_OPT,						handle_print },
 	{ "-x",		NULL, 	"example of arg opt without param", 		JARGF_OPT,						handle_print },
@@ -12,11 +12,11 @@ const struct arg jarg_args[] = {
 };
 
 static void
-handle_print(const struct arg* jarg, int argc, char** argv)
+handle_print(const struct jarg* arg, int argc, char** argv)
 {
 	printf("[ ");
 	for ( int i = 0; i < argc; i++ ) {
-		printf("%s -> %s,", jarg->identifier, argv[i]);
+		printf("%s -> %s,", arg->identifier, argv[i]);
 	}
 	printf(" ]\n");
 }
