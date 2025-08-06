@@ -5,9 +5,9 @@
 static void	handle_print(const struct arg* jarg, int argc, char** argv);
 
 const struct arg jarg_args[] = {
-	{ "-p",		"file", 0,								handle_print },
-	{ "-x",		NULL, 	0,								handle_print },
-	{ "FILE",	NULL, 	JARGF_REQUIRED|JARGF_ANY_COUNT,	handle_print },
+	{ "-p",		"file", JARGF_OPT,						handle_print },
+	{ "-x",		NULL, 	JARGF_OPT,						handle_print },
+	{ "FILE",	NULL, 	JARGF_REQUIRED,	handle_print },
 };
 
 static void

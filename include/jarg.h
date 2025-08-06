@@ -9,8 +9,9 @@
 
 enum arg_flag
 {
-	JARGF_REQUIRED =	1 << 0,
-	JARGF_ANY_COUNT =	1 << 1,
+	JARGF_REQUIRED	= 1 << 0,
+	JARGF_ANY_COUNT = 1 << 1,
+	JARGF_OPT		= 1 << 2,
 };
 
 struct arg
