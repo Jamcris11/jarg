@@ -148,10 +148,16 @@ jarg_print_usage(char* procname, int jarg_args_len)
 			continue;
 		}
 
-		printf(" %s - %s\n", arg->identifier, arg->description);
-	}
+		// TODO: needs evenly tabbed (spaced) columns;
 
-	printf("\n");
+		printf("\t%s ", arg->identifier);
+
+		if ( arg->opt_param != NULL ) {
+			printf("%s ", arg->opt_param);
+		}
+		
+		printf("- %s\n", arg->description);
+	}
 }
 
 static enum jarg_result
