@@ -161,6 +161,13 @@ check_args_valid(int jarg_args_len)
 				jarg_args[i].identifier
 			);
 		}
+
+		if ( jarg->flags & JARGF_OPT && jarg->flags & JARGF_REQUIRED ) {
+			return error(
+				"arg <%s> - JARGF_OPT and JARGF_REQUIRED can not be used together", 
+				jarg_args[i].identifier
+			);
+		}
 	}
 
 	return JARG_SUCCESS;
