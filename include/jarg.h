@@ -16,14 +16,16 @@ enum arg_flag
 struct arg
 {
 	char* identifier;
+	char* opt_param;
 	enum arg_flag flags;
-	void (*handle)(int argc, char** argv);
-	int required_params;
+	void (*handle)(const struct arg* jarg, int argc, char** argv);
 };
 
 extern const struct arg jarg_args[];
 
 const char*	jarg_error_str();
+
+void	jarg_print_usage(char* procname, int jarg_args_len);
 
 int	jarg_handle_args(
 		int jargs_args_len, 

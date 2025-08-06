@@ -2,23 +2,26 @@
 #include <stdlib.h>
 #include "../include/jarg.h"
 
-static void	handle_print(int argc, char** argv);
+static void	handle_print(const struct arg* jarg, int argc, char** argv);
 
 const struct arg jarg_args[] = {
-	{ "-p",		0,					handle_print, 0 },
-	{ "FILE",	JARGF_REQUIRED|JARGF_ANY_COUNT, 	handle_print, 0 },
+	{ "-p",		"file", 0,								handle_print },
+	{ "-x",		NULL, 	0,								handle_print },
+	{ "FILE",	NULL, 	JARGF_REQUIRED|JARGF_ANY_COUNT,	handle_print },
 };
 
 static void
-handle_print(int argc, char** argv)
+handle_print(const struct arg* jarg, int argc, char** argv)
 {
+	printf("[ ");
 	for ( int i = 0; i < argc; i++ ) {
-		printf("%s\n", argv[i]);
+		printf("%s -> %s,", jarg->identifier, argv[i]);
 	}
+	printf(" ]\n");
 }
 
 static void
-handle_unrecognised_cmd(char* cmd)
+unrecognised_arg(char* cmd)
 {
 	fprintf(stderr, "ERROR: unrecognised arg %s\n", cmd);
 	exit(1);
@@ -27,9 +30,15 @@ handle_unrecognised_cmd(char* cmd)
 int
 main(int argc, char** argv)
 {
-	if ( !jarg_handle_args(LEN(jarg_args), handle_unrecognised_cmd, argc, argv) ) {
+	if ( argc < 2 ) {
+		jarg_print_usage(argv[0], LEN(jarg_args));
+		return 0;
+	}
+
+	if ( !jarg_handle_args(LEN(jarg_args), unrecognised_arg, argc, argv) ) {
 		fprintf(stderr, "Error: %s\n", jarg_error_str());
 		return 1;
 	}
+
 	return 0;
 }

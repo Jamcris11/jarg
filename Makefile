@@ -3,7 +3,7 @@ OUT=libjarg.so
 SRC=src/arg.c
 
 build: $(SRC)
-	gcc -Iinclude -shared -fPIC -o $(OUT) $^ 
+	gcc -g -Iinclude -shared -fPIC -o $(OUT) $^ 
 
 src/%.c:
 	gcc -c -Wall -Werror -fPIC $@

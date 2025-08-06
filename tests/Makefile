@@ -1,4 +1,4 @@
-CFLAGS=-L../ -Wl,-rpath=../
+CFLAGS=-L../ -Wl,-rpath=../ -g
 LDFLAGS=-ljarg
 
 .PHONY: build
