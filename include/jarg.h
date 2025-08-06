@@ -5,8 +5,6 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#define LEN(x) sizeof(x)/sizeof(x[0])
-
 enum arg_flag
 {
 	JARGF_REQUIRED	= 1 << 0,
