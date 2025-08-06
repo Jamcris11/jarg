@@ -5,9 +5,10 @@
 static void	handle_print(const struct arg* jarg, int argc, char** argv);
 
 const struct arg jarg_args[] = {
-	{ "-p",		"file", JARGF_OPT,						handle_print },
-	{ "-x",		NULL, 	JARGF_OPT,						handle_print },
-	{ "FILE",	NULL, 	JARGF_REQUIRED|JARGF_ANY_COUNT,	handle_print },
+/*	  id,		param,	description,								flags,							handle			*/
+	{ "-f",		"file", "example of arg opt with param", 			JARGF_OPT,						handle_print },
+	{ "-x",		NULL, 	"example of arg opt without param", 		JARGF_OPT,						handle_print },
+	{ "FILE",	NULL, 	"example of required and any count arg",	JARGF_REQUIRED|JARGF_ANY_COUNT,	handle_print },
 };
 
 static void

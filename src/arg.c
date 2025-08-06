@@ -137,6 +137,21 @@ jarg_print_usage(char* procname, int jarg_args_len)
 	}
 
 	printf("\n");
+
+	for ( int i = 0; i < jarg_args_len; i++ ) {
+		const struct arg* arg = &jarg_args[i];
+		if ( (arg->flags & JARGF_OPT) == 0 ) {
+			continue;
+		}
+
+		if ( arg->description == NULL ) {
+			continue;
+		}
+
+		printf(" %s - %s\n", arg->identifier, arg->description);
+	}
+
+	printf("\n");
 }
 
 static enum jarg_result

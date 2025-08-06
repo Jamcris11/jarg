@@ -16,6 +16,7 @@ struct arg
 {
 	char* identifier;
 	char* opt_param;
+	char* description;
 	enum arg_flag flags;
 	void (*handle)(const struct arg* jarg, int argc, char** argv);
 };
