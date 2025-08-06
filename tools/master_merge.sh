@@ -4,7 +4,7 @@ commits_since_last_merge=$(git log --oneline --decorate | sed '/master)/q' | wc 
 
 previous_build=$(git log --oneline | grep -m 1 -o 'build v[0-9]\+.[0-9]\+.[0-9]\+' | awk '{print $2}')
 
-major=$(grep 'MAJOR_BUILD' .ENVIRONMENT | awk '{print $NF}')
+major=$(grep 'MAJOR_BUILD' .ENV | awk '{print $NF}')
 previous_major="$(echo $previous_build | cut -d '.' -f1)"
 previous_minor="$(echo $previous_build | cut -d '.' -f2)"
 
