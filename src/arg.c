@@ -2,6 +2,20 @@
 
 static char jarg_error_msg;
 
+static bool
+is_opt(char* arg, int arglen)
+{
+	if ( arglen <= 0 ) {
+		return false;
+	}
+
+	if ( arg[0] != '-' ) {
+		return false;
+	}
+
+	return true;
+}
+
 static int
 get_required_args_count(int jarg_args_len)
 {
@@ -213,6 +227,8 @@ jarg_handle_args(
 			
 			if ( unrecognised_required_arg(rarg, required_handled, required_args) ) {
 				unrecognised_handle(argv[i]);
+			} else if ( is_opt(argv[i], strlen(argv[i])) ) {
+				return error("unrecognised option %s", argv[i]);
 			} else {
 				rarg->handle(rarg, rarg->opt_param == NULL ? 1 : 2, &argv[i]);
 			}
