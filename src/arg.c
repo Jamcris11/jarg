@@ -53,15 +53,29 @@ error(const char* fmt, ...)
 	return JARG_ERROR;
 }
 
-static int
+static bool
+unrecognised_required_arg(
+		const struct jarg* arg, 
+		const int required_args_count, 
+		const int required_args_handled
+) {
+	return arg == NULL || 
+		( !(arg->flags & JARGF_ANY_COUNT) && 
+		required_args_count >= required_args_handled );
+}
+
+static enum jarg_result
 handle_arg(
 		int* it, 
 		int jarg_args_len, 
-		void (*unrecognised_handle)(char*), 
+		enum jarg_result (*unrecognised_handle)(char*),
+		int* required_handled,
+		const int required_args_count,
 		int argc, 
 		char** argv
 ) {
 	const struct jarg* arg;
+	bool arg_recognised = false;
 
 	for ( int i = 0; i < jarg_args_len; i++ ) {
 		arg = &jarg_args[i];
@@ -81,18 +95,23 @@ handle_arg(
 		}
 	}
 
-	return JARG_UNRECOGNISED_CMD;
-}
+	/*## Arg not recognised ##*/
 
-static bool
-unrecognised_required_arg(
-		const struct jarg* arg, 
-		int required_args_count, 
-		int required_args_handled
-) {
-	return arg == NULL || 
-		( !(arg->flags & JARGF_ANY_COUNT) && 
-		required_args_count >= required_args_handled );
+	const struct jarg* rarg = 
+		get_required_arg(jarg_args_len, *required_handled);
+		
+	if ( unrecognised_handle != NULL 
+		&& unrecognised_required_arg(rarg, *(const int*)(required_handled), required_args_count) 
+	) {
+		return unrecognised_handle(argv[*it]);
+	} else if ( is_opt(argv[*it], strlen(argv[*it])) ) {
+		return error("unrecognised option %s", argv[*it]);
+	} else {
+		rarg->handle(rarg, rarg->opt_param == NULL ? 1 : 2, &argv[*it]);
+	}
+		
+	(*required_handled)++;
+	return JARG_SUCCESS; 
 }
 
 static enum jarg_result
@@ -191,46 +210,35 @@ jarg_print_usage(char* procname, int jarg_args_len)
 enum jarg_result
 jarg_handle_args(
 		int jarg_args_len, 
-		void (*unrecognised_handle)(char*), 
-		int argc, 
+		enum jarg_result (*unrecognised_handle)(char*), 
+		int argc,
 		char** argv
 ) {
-	int required_args = get_required_args_count(jarg_args_len);
-	int required_handled = 0;
+	const int required_args_count = get_required_args_count(jarg_args_len);
+	static int required_handled;
+
+	required_handled = 0;
 
 	if ( !check_args_valid(jarg_args_len) ) {
 		return JARG_ERROR;
 	}
 
 	for ( int i = 1; i < argc; i++ ) {
-		bool arg_recognised = false;
-
 		const enum jarg_result res = 
-			handle_arg(&i, jarg_args_len, unrecognised_handle, argc, argv);
+			handle_arg(&i, 
+					jarg_args_len, 
+					unrecognised_handle, 
+					&required_handled,
+					required_args_count,
+					argc, 
+					argv);
 
 		if ( res == JARG_ERROR ) {
 			return JARG_ERROR;
-		} else if ( res == JARG_SUCCESS ) {
-			arg_recognised = true;
-		}
-
-		if ( arg_recognised == false && unrecognised_handle != NULL ) {
-			const struct jarg* rarg = 
-				get_required_arg(jarg_args_len, required_handled);
-			
-			if ( unrecognised_required_arg(rarg, required_handled, required_args) ) {
-				unrecognised_handle(argv[i]);
-			} else if ( is_opt(argv[i], strlen(argv[i])) ) {
-				return error("unrecognised option %s", argv[i]);
-			} else {
-				rarg->handle(rarg, rarg->opt_param == NULL ? 1 : 2, &argv[i]);
-			}
-			
-			required_handled++;
-		}
+		} 
 	}
 
-	if ( required_handled < required_args ) {
+	if ( required_handled < required_args_count ) {
 		const struct jarg* rarg = 
 			get_required_arg(jarg_args_len, required_handled);
 		return error("%s is a required argument", rarg->identifier);

@@ -21,11 +21,11 @@ handle_print(const struct jarg* arg, int argc, char** argv)
 	printf(" ]\n");
 }
 
-static void
+static enum jarg_result 
 unrecognised_arg(char* cmd)
 {
 	fprintf(stderr, "ERROR: unrecognised arg %s\n", cmd);
-	exit(1);
+	return JARG_ERROR;
 }
 
 int

@@ -29,6 +29,12 @@ struct jarg
 	void (*handle)(const struct jarg* jarg, int argc, char** argv);
 };
 
+/**
+ * Definitions for your program's arguments.
+ *
+ * This variable needs to be defined by the linking excecutable,
+ * else the linker will throw an undefined error.
+ */
 extern const struct jarg jarg_args[];
 
 /**
@@ -38,7 +44,7 @@ extern const struct jarg jarg_args[];
 const char*	jarg_error_str();
 
 /**
- * Prints arguments and their descriptions
+ * Prints arguments and their descriptions to stdout.
  * @param[in] procname process name, usually argv[0]
  * @param[in] jarg_args_len
  */
@@ -53,8 +59,8 @@ void	jarg_print_usage(char* procname, int jarg_args_len);
  * @return JARG_SUCCESS on success, JARG_ERROR on failure
  */
 enum jarg_result	jarg_handle_args(
-	int jargs_args_len, 
-	void (*unrecognised_handle)(char*), 
+	int jarg_args_len, 
+	enum jarg_result (*unrecognised_handle)(char*), 
 	int argc, 
 	char** argv);
 
