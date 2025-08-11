@@ -5,14 +5,7 @@ static char jarg_error_msg;
 static bool
 is_opt(char* arg, int arglen)
 {
-	if ( arglen <= 0 ) {
-		return false;
-	}
-
-	if ( arg[0] != '-' ) {
-		return false;
-	}
-
+	if ( arglen <= 0 || arg[0] != '-' ) { return false; }
 	return true;
 }
 
@@ -73,7 +66,7 @@ handle_arg(
 	for ( int i = 0; i < jarg_args_len; i++ ) {
 		arg = &jarg_args[i];
 
-		if ( !strcmp(argv[(*it)], arg->identifier) ) {
+		if ( !strcmp(argv[(*it)], arg->identifier) && arg->flags & JARGF_OPT ) {
 			if ( arg->opt_param != NULL && argc-(*it) <= 1 ) {
 				return error(
 					"%s requires %s as a parameter", 
