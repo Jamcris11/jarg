@@ -28,7 +28,7 @@ static const struct jarg*
 get_required_arg(int jarg_args_len, int nth)
 {
 	for ( int i = 0; i < jarg_args_len; i++ ) {
-		if ( jarg_args[i].flags & JARGF_REQUIRED ) {
+		if ( jarg_args[i].flags & JARGF_REQUIRED || jarg_args[i].flags & JARGF_ANY_COUNT ) {
 			if ( nth != 0 && jarg_args[i].flags & JARGF_ANY_COUNT == 0 ) {
 				nth--;
 				continue;
