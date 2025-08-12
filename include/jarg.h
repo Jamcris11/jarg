@@ -10,7 +10,8 @@ enum jarg_result
 {
 	JARG_ERROR=0,
 	JARG_SUCCESS,
-	JARG_UNRECOGNISED_CMD
+	JARG_UNRECOGNISED_CMD,
+	JARG_QUIT_EARLY
 };
 
 enum jarg_flag
@@ -18,6 +19,7 @@ enum jarg_flag
 	JARGF_REQUIRED	= 1 << 0,
 	JARGF_ANY_COUNT = 1 << 1,
 	JARGF_OPT		= 1 << 2,
+	JARGF_USAGE		= 1 << 3,
 };
 
 struct jarg

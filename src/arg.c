@@ -89,6 +89,11 @@ handle_arg(
 				);
 			}
 
+			if ( arg->flags & JARGF_USAGE ) {
+				jarg_print_usage(argv[0], jarg_args_len);
+				return JARG_QUIT_EARLY;
+			}
+
 			arg->handle(arg, arg->opt_param == NULL ? 1 : 2, &argv[(*it)]);
 			(*it) += arg->opt_param == NULL ? 0 : 1;
 			return JARG_SUCCESS;
@@ -157,6 +162,9 @@ jarg_error_str()
 void
 jarg_print_usage(char* procname, int jarg_args_len)
 {
+	int longest_arg = 0;
+	char buffer[64];
+
 	printf("usage: %s ", procname);
 
 	for ( int i = 0; i < jarg_args_len; i++ ) {
@@ -187,6 +195,19 @@ jarg_print_usage(char* procname, int jarg_args_len)
 
 	for ( int i = 0; i < jarg_args_len; i++ ) {
 		const struct jarg* arg = &jarg_args[i];
+		int current_arg = strlen(arg->identifier);
+
+		if ( arg->opt_param != NULL ) {
+			current_arg += 1 + strlen(arg->opt_param);
+		}
+
+		if ( longest_arg < current_arg ) {
+			longest_arg = current_arg + 1;
+		}
+	}
+
+	for ( int i = 0; i < jarg_args_len; i++ ) {
+		const struct jarg* arg = &jarg_args[i];
 		if ( (arg->flags & JARGF_OPT) == 0 ) {
 			continue;
 		}
@@ -197,13 +218,15 @@ jarg_print_usage(char* procname, int jarg_args_len)
 
 		// TODO: needs evenly tabbed (spaced) columns;
 
-		printf("\t%s ", arg->identifier);
-
 		if ( arg->opt_param != NULL ) {
-			printf("%s ", arg->opt_param);
+			strcat(buffer, arg->identifier);
+			strcat(buffer, " ");
+			strcat(buffer, arg->opt_param);
+			printf("\t%-*s- %s\n", longest_arg, buffer, arg->description);
+			memset(buffer, 0, sizeof(buffer)/sizeof(buffer[0]));
+		} else {
+			printf("\t%-*s- %s\n", longest_arg, arg->identifier, arg->description);
 		}
-		
-		printf("- %s\n", arg->description);
 	}
 }
 
@@ -235,7 +258,9 @@ jarg_handle_args(
 
 		if ( res == JARG_ERROR ) {
 			return JARG_ERROR;
-		} 
+		} else if ( res == JARG_QUIT_EARLY ) {
+			return JARG_QUIT_EARLY;
+		}
 	}
 
 	if ( required_handled < required_args_count ) {
