@@ -19,10 +19,10 @@ It will look something like this:
 
 /* example.c */
 const struct arg jarg_args[] = {
-/*    id,       opt_param,  flags,                          handle      */
-    { "-f",     "file",     JARGF_OPT,                      handle_arg_f },
-    { "-x",     NULL,       JARGF_OPT,                      handle_arg_x },
-    { "FILE",   NULL,       JARGF_REQUIRED|JARGF_ANY_COUNT, handle_arg_file },
+/*    id,       opt_param,  example,        flags,                          handle      */
+    { "-f",     "file",     "e.g. desc",    JARGF_OPT,                      handle_arg_f },
+    { "-x",     NULL,       "e.g. desc",    JARGF_OPT,                      handle_arg_x },
+    { "FILE",   NULL,       "e.g. desc",    JARGF_REQUIRED|JARGF_ANY_COUNT, handle_arg_file },
 };
 ```
 
